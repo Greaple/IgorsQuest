@@ -13,6 +13,15 @@ import type { Lang } from './Language';
 
 type PageTexts = Record<string, string>;
 
+/** The privacy note's links (`privacy`, in the help dialog), opened in a new tab. */
+const GITHUB_PRIVACY =
+  'https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement';
+const GOOGLE_PRIVACY = 'https://policies.google.com/privacy';
+const ISSUES = 'https://github.com/Greaple/IgorsQuest/issues';
+function link(href: string, text: string): string {
+  return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+}
+
 const TEXT: Record<Lang, PageTexts> = {
   fr: {
     pageTitle: 'Igor’s Quest — Les Cavernes de Hammerfest',
@@ -62,6 +71,12 @@ const TEXT: Record<Lang, PageTexts> = {
     hdBitmaps:
       'Images agrandies pour les grands écrans avec un modèle de Philip Hofmann (CC BY 4.0) :',
     fonts: 'Polices libres (SIL OFL 1.1) à la place de Franklin Gothic et Impact :',
+    privacyTitle: 'Confidentialité',
+    privacy:
+      `<p>Votre progression, vos scores et vos réglages sont gardés dans ce navigateur, sur cet appareil seulement. Le jeu ne pose aucun cookie et n’a ni publicité, ni statistiques, ni pistage. Le site est hébergé par GitHub Pages, qui, comme tout hébergeur, voit l’adresse IP des visiteurs (${link(GITHUB_PRIVACY, 'déclaration de confidentialité de GitHub')}).</p>` +
+      `<p><strong>Sauvegarde en ligne (facultative).</strong> Si vous vous connectez avec Google dans les options de jeu, le jeu garde l’identifiant, l’adresse e-mail, le nom et la photo de votre compte Google (Firebase Authentication), et une copie de votre progression, de vos scores, de vos réglages et de vos touches (Cloud Firestore, dans l’Union européenne). Ils servent seulement à retrouver votre partie sur vos autres appareils : rien n’est partagé, vendu ni utilisé à autre chose. Ces services de Google Firebase suivent les ${link(GOOGLE_PRIVACY, 'règles de confidentialité de Google')} ; contre les abus, ils peuvent vérifier avec Google reCAPTCHA que les demandes viennent bien de ce site.</p>` +
+      `<p>Votre sauvegarde en ligne reste jusqu’à ce que vous la supprimiez : « Supprimer en ligne », dans les options de jeu, efface pour de bon la sauvegarde et votre compte dans le jeu (votre progression reste sur cet appareil). Se déconnecter la laisse en ligne.</p>` +
+      `<p>Igor’s Quest est fait par un seul développeur bénévole, Greaple. Pour toute question sur vos données, ou pour en demander une copie ou l’effacement, ouvrez un ticket sur ${link(ISSUES, 'le GitHub du projet')}.</p>`,
     devKeysTitle: 'Touches de développement',
     devKeysNote:
       'Celles du jeu original en mode développeur. Les chiffres sont ceux du pavé numérique ou de la rangée du haut. Elles ne marchent pas pendant un enregistrement ou un replay, et les lettres gardent leur usage normal (W saute aussi).',
@@ -128,6 +143,12 @@ const TEXT: Record<Lang, PageTexts> = {
     padIcons: 'Controller icons, from Figma Community (CC BY 4.0):',
     hdBitmaps: 'Bitmaps for big screens upscaled with a model by Philip Hofmann (CC BY 4.0):',
     fonts: 'Free fonts (SIL OFL 1.1) standing in for Franklin Gothic and Impact:',
+    privacyTitle: 'Privacy',
+    privacy:
+      `<p>Your progress, scores and settings are kept in this browser, on this device only. The game sets no cookies and has no ads, analytics or tracking. The site is hosted by GitHub Pages, which, like any web host, sees visitors’ IP addresses (${link(GITHUB_PRIVACY, 'GitHub’s privacy statement')}).</p>` +
+      `<p><strong>Online save (optional).</strong> If you sign in with Google in the game options, the game keeps your Google account’s identifier, email address, name and picture (Firebase Authentication), and a copy of your progress, scores, settings and controls (Cloud Firestore, in the European Union). They are used only to bring your game to your other devices: nothing is shared, sold or used for anything else. These Google Firebase services follow ${link(GOOGLE_PRIVACY, 'Google’s privacy policy')}; to block abuse, they may check with Google reCAPTCHA that requests come from this site.</p>` +
+      `<p>Your online save stays until you delete it: “Delete online save”, in the game options, erases the save and your account in the game for good (your progress stays on this device). Signing out leaves it online.</p>` +
+      `<p>Igor’s Quest is made by one volunteer developer, Greaple. For any question about your data, or to ask for a copy or for it to be erased, open an issue on ${link(ISSUES, 'the project’s GitHub')}.</p>`,
     devKeysTitle: 'Developer keys',
     devKeysNote:
       'The original game’s own dev mode keys. Digits are the numpad’s or the top row’s. They are off while recording or replaying, and letters keep their game use (W also jumps).',
@@ -195,6 +216,12 @@ const TEXT: Record<Lang, PageTexts> = {
     hdBitmaps:
       'Imágenes ampliadas para pantallas grandes con un modelo de Philip Hofmann (CC BY 4.0):',
     fonts: 'Fuentes libres (SIL OFL 1.1) en lugar de Franklin Gothic e Impact:',
+    privacyTitle: 'Privacidad',
+    privacy:
+      `<p>Tu progreso, tus puntuaciones y tus ajustes se guardan en este navegador, solo en este dispositivo. El juego no usa cookies y no tiene publicidad, estadísticas ni rastreo. El sitio está alojado en GitHub Pages, que, como cualquier alojamiento web, ve la dirección IP de los visitantes (${link(GITHUB_PRIVACY, 'declaración de privacidad de GitHub')}).</p>` +
+      `<p><strong>Guardado en línea (opcional).</strong> Si te conectas con Google en las opciones de juego, el juego guarda el identificador, la dirección de correo, el nombre y la foto de tu cuenta de Google (Firebase Authentication), y una copia de tu progreso, tus puntuaciones, tus ajustes y tus controles (Cloud Firestore, en la Unión Europea). Solo sirven para llevar tu partida a tus otros dispositivos: nada se comparte, se vende ni se usa para otra cosa. Estos servicios de Google Firebase siguen la ${link(GOOGLE_PRIVACY, 'política de privacidad de Google')}; contra los abusos, pueden comprobar con Google reCAPTCHA que las peticiones vienen de este sitio.</p>` +
+      `<p>Tu guardado en línea se queda hasta que lo borres: «Borrar en línea», en las opciones de juego, borra para siempre el guardado y tu cuenta en el juego (tu progreso se queda en este dispositivo). Desconectarte lo deja en línea.</p>` +
+      `<p>Igor’s Quest lo hace un solo desarrollador voluntario, Greaple. Para cualquier pregunta sobre tus datos, o para pedir una copia o que se borren, abre una incidencia en ${link(ISSUES, 'el GitHub del proyecto')}.</p>`,
     devKeysTitle: 'Teclas de desarrollo',
     devKeysNote:
       'Las del modo desarrollador del juego original. Las cifras son las del teclado numérico o de la fila de arriba. No funcionan durante una grabación o una repetición, y las letras siguen con su uso normal (W también salta).',

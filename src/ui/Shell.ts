@@ -301,6 +301,7 @@ const TEXT: Record<Lang, Record<string, string>> = {
     cloudRecaptcha:
       'Ce service est protégé par reCAPTCHA : les {privacy} et les {terms} de Google s’appliquent.',
     cloudPrivacy: 'règles de confidentialité',
+    cloudNote: 'Confidentialité',
     cloudTerms: 'conditions d’utilisation',
     cloudSignIn: 'Se connecter avec Google',
     cloudSignOut: 'Se déconnecter',
@@ -475,6 +476,7 @@ const TEXT: Record<Lang, Record<string, string>> = {
     cloudRecaptcha:
       'This service is protected by reCAPTCHA and the Google {privacy} and {terms} apply.',
     cloudPrivacy: 'Privacy Policy',
+    cloudNote: 'Privacy',
     cloudTerms: 'Terms of Service',
     cloudSignIn: 'Sign in with Google',
     cloudSignOut: 'Sign out',
@@ -653,6 +655,7 @@ const TEXT: Record<Lang, Record<string, string>> = {
     cloudRecaptcha:
       'Este servicio está protegido por reCAPTCHA y se aplican la {privacy} y los {terms} de Google.',
     cloudPrivacy: 'Política de privacidad',
+    cloudNote: 'Privacidad',
     cloudTerms: 'Términos del servicio',
     cloudSignIn: 'Conectarse con Google',
     cloudSignOut: 'Desconectarse',
@@ -3350,8 +3353,22 @@ export class Shell {
       h('span', { class: 'cloud-btns' }, buttons),
       h('p', { class: 'set-hint' }, t.cloudHint),
       // Stays in the compact layouts, which hide the hints
-      cloud.recaptcha ? h('p', { class: 'cloud-legal' }, this.recaptchaNote()) : null,
+      h(
+        'p',
+        { class: 'cloud-legal' },
+        h('a', { href: '#about-privacy', onclick: (e: Event) => this.openPrivacy(e) }, t.cloudNote),
+        cloud.recaptcha ? [' · ', this.recaptchaNote()] : null,
+      ),
     );
+  }
+
+  /** The help dialog, at its privacy note (port addition: what the online save keeps). */
+  private openPrivacy(e: Event): void {
+    e.preventDefault();
+    const dialog = document.getElementById('about-dialog');
+    if (!(dialog instanceof HTMLDialogElement)) return;
+    if (!dialog.open) dialog.showModal();
+    document.getElementById('about-privacy')?.scrollIntoView({ block: 'start' });
   }
 
   /** The notice Google asks for where reCAPTCHA runs without its badge (App Check hides it). */

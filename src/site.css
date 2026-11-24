@@ -3784,8 +3784,8 @@ html:not(.touch) body[data-page='framed'] .game-canvas-container {
 }
 
 .frame-site .cloud-legal {
-  /* 9 px or more once a phone scales the frame down */
-  font-size: 11.5px;
+  /* 9 px or more once a phone scales the frame down (a 360 px wide phone scales it by 0.77) */
+  font-size: 12px;
   line-height: 1.3;
 }
 

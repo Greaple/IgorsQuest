@@ -2,8 +2,61 @@ rules_version = '2';
 
 // The online save (src/cloud/CloudSave.ts): one document per player, `saves/{uid}`, that only its
 // owner can read, write or delete. Everything else is closed.
+//
+// Every field has a bounded size, so a script with a player's sign-in cannot fill the document
+// (Firestore allows 1 MiB). Rules cannot loop over a map, so the maps list their keys: the level
+// sets of `CLOUD_LEVEL_SETS` and the settings of `CLOUD_SETTINGS` (`src/cloud/CloudDoc.ts`,
+// which sends only those; `tests/cloud-merge.test.ts` checks that both lists match this file).
 service cloud.firestore {
   match /databases/{database}/documents {
+    // `igorsquest_settings_v1` (`PlayerSettings`): numbers only
+    function isSettings(m) {
+      return m is map
+        && m.keys().hasOnly(['volume', 'sound', 'music', 'detail', 'shake'])
+        && m.get('volume', 0) is number
+        && m.get('sound', 0) is number
+        && m.get('music', 0) is number
+        && m.get('detail', 0) is number
+        && m.get('shake', 0) is number;
+    }
+
+    // The highest level reached in each level set (`GameSaveData.highestLevel`)
+    function isLevels(m) {
+      return m is map
+        && m.keys().hasOnly([
+          'adventure', 'adventure_english', 'ayame', 'basicAdventure', 'bumdum', 'deepnight',
+          'dev', 'fjv', 'hiko', 'hk', 'hof', 'multiTime', 'shareware', 'soccer', 'test',
+          'timeAttack', 'tutorial'])
+        && m.get('adventure', 0) is number
+        && m.get('adventure_english', 0) is number
+        && m.get('ayame', 0) is number
+        && m.get('basicAdventure', 0) is number
+        && m.get('bumdum', 0) is number
+        && m.get('deepnight', 0) is number
+        && m.get('dev', 0) is number
+        && m.get('fjv', 0) is number
+        && m.get('hiko', 0) is number
+        && m.get('hk', 0) is number
+        && m.get('hof', 0) is number
+        && m.get('multiTime', 0) is number
+        && m.get('shareware', 0) is number
+        && m.get('soccer', 0) is number
+        && m.get('test', 0) is number
+        && m.get('timeAttack', 0) is number
+        && m.get('tutorial', 0) is number;
+    }
+
+    // The part of `igorsquest_save_v1` the cloud keeps (`CloudSaveData`)
+    function isSave(m) {
+      return m is map
+        && m.keys().hasOnly(['highScore', 'highestLevel', 'preferredLang', 'muted'])
+        && m.get('highScore', 0) is number
+        && isLevels(m.get('highestLevel', {}))
+        && m.get('preferredLang', '') is string
+        && m.get('preferredLang', '').size() <= 8
+        && m.get('muted', false) is bool;
+    }
+
     match /saves/{uid} {
       allow read, delete: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null
@@ -15,8 +68,8 @@ service cloud.firestore {
         && request.resource.data.profile.size() < 20000
         && request.resource.data.controls is string
         && request.resource.data.controls.size() < 5000
-        && request.resource.data.save is map
-        && request.resource.data.settings is map
+        && isSave(request.resource.data.save)
+        && isSettings(request.resource.data.settings)
         && request.resource.data.settingsAt is number
         && request.resource.data.updatedAt == request.time;
     }

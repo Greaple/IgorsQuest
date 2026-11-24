@@ -1546,7 +1546,8 @@ html[data-input='gamepad'] .controls-pad {
   color: var(--ink-soft);
 }
 
-.parchment-dialog .credits-links a {
+.parchment-dialog .credits-links a,
+.parchment-dialog .privacy-note a {
   color: #8a4b12;
 }
 

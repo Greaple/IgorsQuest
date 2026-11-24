@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { fromCloudDoc, toCloudDoc } from '../src/cloud/CloudDoc';
+import { CLOUD_LEVEL_SETS, CLOUD_SETTINGS, fromCloudDoc, toCloudDoc } from '../src/cloud/CloudDoc';
 import {
   type CloudSnapshot,
   isNewProfile,
@@ -235,5 +235,34 @@ describe('the cloud document', () => {
     expect(back.settings.volume).toBe(100);
     expect(back.controls).toEqual(DEFAULT_BINDINGS);
     expect(back.settingsAt).toBe(0);
+  });
+
+  it('sends only the level sets and settings the rules list', () => {
+    const s = snapshot(newProfile(), {
+      save: {
+        highScore: 10,
+        highestLevel: { adventure: 12, someOldSet: 3 },
+        preferredLang: 'en',
+        muted: false,
+      },
+      settings: { ...DEFAULT_SETTINGS, extra: 1 } as typeof DEFAULT_SETTINGS,
+    });
+    const doc = toCloudDoc(s, null);
+    expect(doc.save.highestLevel).toEqual({ adventure: 12 });
+    expect(Object.keys(doc.settings).sort()).toEqual([...CLOUD_SETTINGS].sort());
+  });
+
+  it('lists the same keys as firestore.rules and the level sets of the manifest', () => {
+    const rules = readFileSync(join(__dirname, '../firestore.rules'), 'utf-8');
+    const listed = (fn: string) => {
+      const body = rules.slice(rules.indexOf(`function ${fn}(`));
+      const list = body.slice(body.indexOf('hasOnly(['), body.indexOf('])'));
+      return [...list.matchAll(/'([^']+)'/g)].map((m) => m[1]).sort();
+    };
+    expect(listed('isLevels')).toEqual([...CLOUD_LEVEL_SETS].sort());
+    expect(listed('isSettings')).toEqual([...CLOUD_SETTINGS].sort());
+    expect(Object.keys(DEFAULT_SETTINGS).sort()).toEqual([...CLOUD_SETTINGS].sort());
+    const manifest = JSON.parse(readFileSync(join(DATA, 'manifest.json'), 'utf-8'));
+    expect([...manifest.levelSets].sort()).toEqual([...CLOUD_LEVEL_SETS].sort());
   });
 });

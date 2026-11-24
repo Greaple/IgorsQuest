@@ -1,0 +1,23 @@
+# Dependabot: security fixes as soon as an advisory is out (turned on in the repository's
+# settings), and the other updates once a month, grouped into one pull request per ecosystem so
+# they stay few. Each pull request runs the CI; nothing deploys before it is merged into main.
+# npm reads `.npmrc` (legacy-peer-deps), as `npm ci --legacy-peer-deps` does in the CI.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      npm:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']

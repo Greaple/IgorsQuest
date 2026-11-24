@@ -8,6 +8,33 @@ import type { CloudSaveData, CloudSnapshot } from './merge';
 export const CLOUD_DOC_VERSION = 1;
 
 /**
+ * The level sets whose highest level the cloud keeps (`public/data/manifest.json`), and the
+ * settings it keeps (`PlayerSettings`). `firestore.rules` lists the same keys, as rules cannot
+ * loop over a map to bound its size: a key missing there refuses the whole save, so the
+ * document carries only these.
+ */
+export const CLOUD_LEVEL_SETS = [
+  'adventure',
+  'adventure_english',
+  'ayame',
+  'basicAdventure',
+  'bumdum',
+  'deepnight',
+  'dev',
+  'fjv',
+  'hiko',
+  'hk',
+  'hof',
+  'multiTime',
+  'shareware',
+  'soccer',
+  'test',
+  'timeAttack',
+  'tutorial',
+] as const;
+export const CLOUD_SETTINGS = ['volume', 'sound', 'music', 'detail', 'shake'] as const;
+
+/**
  * The Firestore document `saves/{uid}` (fields checked by `firestore.rules`). The profile is the
  * same `PersistCodec` string as in `localStorage`, with its CRC. The controls are a JSON string,
  * as Firestore has no arrays in arrays.
@@ -23,16 +50,23 @@ export interface CloudDoc {
 }
 
 export function toCloudDoc(s: CloudSnapshot, updatedAt: unknown): CloudDoc {
+  const highestLevel: Record<string, number> = {};
+  for (const set of CLOUD_LEVEL_SETS) {
+    const level = s.save.highestLevel[set];
+    if (typeof level === 'number') highestLevel[set] = level;
+  }
+  const settings: Record<string, number> = {};
+  for (const k of CLOUD_SETTINGS) settings[k] = s.settings[k];
   return {
     v: CLOUD_DOC_VERSION,
     profile: encodeProfile(s.profile),
     save: {
       highScore: s.save.highScore,
-      highestLevel: { ...s.save.highestLevel },
-      preferredLang: s.save.preferredLang,
+      highestLevel,
+      preferredLang: s.save.preferredLang.slice(0, 8),
       muted: s.save.muted,
     },
-    settings: { ...s.settings },
+    settings,
     controls: JSON.stringify(s.controls),
     settingsAt: s.settingsAt,
     updatedAt,
