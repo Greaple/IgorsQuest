@@ -35,7 +35,7 @@
     "swf-parser": "^0.14.1",
     "swf-types": "^0.14.0",
     "tsx": "^4.23.15",
-    "typescript": "^5.9.0",
+    "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^5.1.0"
   }
