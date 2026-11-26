@@ -15,7 +15,8 @@ It is slow on purpose (one file every ~7 s): the Wayback Machine refuses connect
   - `home_YYYYMM.html`: the home page from 2006 to 2020 (texts: "plus de 70 quêtes", 5 free games, then 1 a day)
   - `user_<id>_<year>.html`: public player profiles. Each lists best score, best level, weekly
     score, pyramid rank, **completed quests, quests in progress**, and the **fridge** ("Objets du
-    réfrigérateur", `N objets sur 353`, one small icon per item id, `a.gif` for an item not found yet)
+    réfrigérateur", `N objets sur 353`, one small icon per item id, `a.gif` for an item not found yet).
+    Not committed (they are other players' data): the fetch script above downloads them
   - `scores*.html`, `halloffame.html`: rankings
   - `play_result_*.html`: what every archived results page contains: the "Not owner" error (see below)
 - `hammerfest.fr/img/design/`: site graphics. Mode menu buttons `choice_*.gif` (`_off` when locked),

@@ -6,3 +6,14 @@ coverage/
 .vite/
 .cache/
 .env*.local
+
+# The maintainer's notes and tool settings: kept on their machine, not on GitHub
+CLAUDE.md
+.claude/
+docs/ROADMAP.md
+docs/PORT_STATUS.md
+docs/LEVELS.md
+
+# Archived profiles of hammerfest.fr players (other people's data, reference only):
+# `npx tsx tools/fetch-site-archive.ts` downloads them again
+assets-src/site-archive/hammerfest.fr/pages/user_*.html
